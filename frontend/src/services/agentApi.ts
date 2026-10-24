@@ -2,7 +2,7 @@ import type { AgentRequest, AgentResponse } from '../types/agent';
 import { createDemoResponse } from './demoFixtures';
 
 const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
-const configuredBaseUrl = ((import.meta.env.VITE_API_BASE_URL as string | undefined) || 'http://127.0.0.1:8000').replace(/\/$/, '');
+const configuredBaseUrl = ((import.meta.env.VITE_API_BASE_URL as string | undefined) || 'http://127.0.0.1:8001').replace(/\/$/, '');
 
 export class AgentApiError extends Error {
   constructor(message: string, public status?: number) {
