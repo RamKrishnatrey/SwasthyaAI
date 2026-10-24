@@ -32,7 +32,7 @@ def main() -> int:
     for path in files:
         try:
             df = load_frame(path)
-            entry = {"file": str(path), "rows": int(len(df)), "columns": {str(col): {"dtype": str(df[col].dtype), "missing": int(df[col].isna().sum()), "unique": int(df[col].nunique(dropna=True)} for col in df.columns}}
+            entry = {"file": str(path), "rows": int(len(df)), "columns": {str(col): {"dtype": str(df[col].dtype), "missing": int(df[col].isna().sum()), "unique": int(df[col].nunique(dropna=True))} for col in df.columns}}
             for col in df.select_dtypes(include=["object", "string"]).columns:
                 if df[col].nunique(dropna=True) <= 30:
                     entry["columns"][str(col)]["top_values"] = {str(k): int(v) for k, v in df[col].value_counts(dropna=True).head(10).items()}
