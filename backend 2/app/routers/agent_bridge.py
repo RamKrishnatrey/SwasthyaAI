@@ -5,6 +5,7 @@ intake, safety, and triage services. It deliberately reports prototype triage as
 such; it does not claim that unconfigured trained models were loaded.
 """
 from typing import Literal, Optional
+import re
 
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
@@ -43,8 +44,28 @@ def _urgency(value: Optional[str]) -> str:
 async def agent_message(request: AgentMessageRequest):
     # The frontend includes the current turn in history. Avoid appending it twice.
     user_turns = [m.content.strip() for m in request.history if m.role == "user" and m.content.strip()]
-    if not user_turns or user_turns[-1] != request.message.strip():
-        user_turns.append(request.message.strip())
+    latest_user_text = request.message.strip()
+    if not user_turns or user_turns[-1] != latest_user_text:
+        user_turns.append(latest_user_text)
+
+    # A bare number is a valid answer when the previous assistant turn asked for age.
+    last_assistant_prompt = next(
+        (m.content.lower() for m in reversed(request.history) if m.role == "assistant"),
+        "",
+    )
+    if (
+        re.fullmatch(r"\d{1,3}", latest_user_text)
+        and any(token in last_assistant_prompt for token in ("age", "how old", "age group", "exact age"))
+    ):
+        age = int(latest_user_text)
+        if 0 <= age <= 120:
+            user_turns[-1] = f"I am {age} years old"
+    elif (
+        latest_user_text.lower().strip(" .,!") in {"adult", "child", "infant", "elderly", "teenager"}
+        and any(token in last_assistant_prompt for token in ("age", "how old", "age group", "exact age"))
+    ):
+        user_turns[-1] = latest_user_text
+
     combined_text = "\n".join(user_turns)[-8000:]
 
     safety = evaluate_safety(combined_text)
