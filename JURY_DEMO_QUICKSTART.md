@@ -36,6 +36,20 @@ npm run dev
 
 Open the Vite URL printed in the terminal (usually http://localhost:5173). The frontend is configured for live backend mode by default. To explicitly run the clearly labeled demo fixtures instead, set `VITE_DEMO_MODE=true` in `frontend/.env.local` and restart Vite.
 
+## Optional LLM conversation replies
+
+The backend can use an OpenAI-compatible Chat Completions API for multilingual conversational replies. Without a key, it safely falls back to the local rule-based prototype response. The LLM key stays on the backend and is never sent to the frontend.
+
+In `backend 2/.env`, set these values (never commit the real key):
+
+```dotenv
+LLM_API_KEY=your_provider_api_key
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_MODEL=gpt-4o-mini
+```
+
+For an OpenAI-compatible provider, use its documented API base URL and model ID. Restart the backend after editing `.env`. API usage may incur charges depending on the provider. The LLM is for conversation only; triage is still rule-based and is not clinically validated.
+
 ## 3. Quick API check
 
 With backend 2 running, open:
