@@ -24,6 +24,11 @@ datasets/
 *.h5
 *.keras
 
+# Local application data
+.local/
+*.sqlite3
+*.db
+
 # Frontend
 node_modules/
 frontend/dist/
