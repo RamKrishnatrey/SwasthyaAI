@@ -13,13 +13,13 @@ py -3.11 -m venv .venv
 python -m pip install --upgrade pip
 pip install -e ".[dev]"
 Copy-Item .env.example .env -ErrorAction SilentlyContinue
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 ```
 
 Leave this terminal running. Check the backend at:
 
-- Health: http://127.0.0.1:8000/health
-- API docs: http://127.0.0.1:8000/docs
+- Health: http://127.0.0.1:8001/health
+- API docs: http://127.0.0.1:8001/docs
 
 If `py -3.11` is unavailable, use an installed Python 3.11+ interpreter.
 
@@ -41,10 +41,10 @@ Open the Vite URL printed in the terminal (usually http://localhost:5173). The f
 With backend 2 running, open:
 
 ```powershell
-Invoke-RestMethod http://127.0.0.1:8000/health
+Invoke-RestMethod http://127.0.0.1:8001/health
 ```
 
-The live frontend agent route is `POST http://127.0.0.1:8000/api/agent/message`. The backend bridge asks follow-up questions from backend 2 intake, applies its SafetyShield rules, then returns the current prototype triage response.
+The live frontend agent route is `POST http://127.0.0.1:8001/api/agent/message`. The backend bridge asks follow-up questions from backend 2 intake, applies its SafetyShield rules, then returns the current prototype triage response.
 
 ## Important limitations for the jury
 
