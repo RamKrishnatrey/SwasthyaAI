@@ -23,6 +23,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+data = [
+    "huggingface_hub==0.24.6",
+    "pandas==2.2.2",
+    "pyarrow==17.0.0",
+]
 dev = [
     "pytest==8.2.2",
     "pytest-asyncio==0.23.6",
