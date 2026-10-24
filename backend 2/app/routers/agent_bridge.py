@@ -49,7 +49,7 @@ async def agent_message(request: AgentMessageRequest):
     safety = evaluate_safety(combined_text)
     if safety.red_flag:
         first_flag = safety.matched_rules[0] if safety.matched_rules else None
-        instruction = safety.instructions or "Contact local emergency services now if someone may be in immediate danger."
+        instruction = "A possible emergency warning was detected. Call local emergency services (112/108 in India) now if someone may be in immediate danger. Follow the dispatcher’s instructions; do not wait for this app."
         return {
             "status": "possible_emergency",
             "response": f"Safety warning: {instruction}",
