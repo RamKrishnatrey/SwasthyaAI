@@ -84,9 +84,10 @@
 - `rank_caregivers(caregivers: list[Caregiver], care_type: CareType, location: Location | None, language: Language) -> list[CaregiverMatch]`.
 - `ModelAdapter.predict(text: str, context: dict) -> Awaitable[ModelResult]`; adapters declare task, languages, input/output schema, and timeout.
 - `run_relevant_models(registry: ModelRegistry, request: AgentInput) -> list[ModelResult]` starts every matching adapter concurrently, isolates per-model errors/timeouts, and never dispatches unrelated capabilities.
-- `aggregate_triage(results: list[ModelResult]) -> AggregatedTriage` returns `agreed`, `disagreement`, or `fallback`; compatible results may be combined only under the task's configured rule, and disagreement/low confidence requires human review.
+- `aggregate_triage(results: list[ModelResult]) -> AggregatedTriage` returns `agreed`, `single_model`, `disagreement`, or `fallback`; compatible results may be combined only under the task's configured rule, and disagreement/low confidence requires human review.
 - `load_dataset_manifests(directory: Path) -> list[DatasetManifest]`; `compatible_datasets(items: list[DatasetManifest], task: str) -> list[list[DatasetManifest]]` groups only compatible task/schema/language/license manifests.
-- `GeminiWordingAdapter.rephrase(result: AgentResponse, consent: bool) -> str | None` is disabled without `GEMINI_API_KEY`; its text cannot mutate structured fields.
+- `AgentInput.external_ai_consent: bool = False` is an explicit per-turn consent field; no provider call occurs unless it is true.
+- `GeminiWordingAdapter.rephrase(result: AgentResponse, consent: bool) -> str | None` is disabled without `GEMINI_API_KEY` or consent; its text cannot mutate structured fields.
 - `ModelRegistry.status() -> list[ModelStatus]` reports model and dataset metadata without secrets or raw paths.
 - `POST /api/v1/agent/turn` accepts bounded input and returns the spec's `AgentResponse` schema including per-model statuses.
 
