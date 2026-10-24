@@ -21,4 +21,5 @@ jobs:
           cache-dependency-path: backend 2/pyproject.toml
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[dev]'
+      - run: python -m compileall -q app scripts tests
       - run: python -m pytest
