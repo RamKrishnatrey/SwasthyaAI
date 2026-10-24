@@ -1,0 +1,70 @@
+{
+  "model": "word_char_tfidf_linear_svc",
+  "target": "urgency",
+  "input": "patient_query",
+  "rows_after_cleaning": 11213,
+  "train_rows": 8970,
+  "test_rows": 2243,
+  "accuracy": 0.3611234953187695,
+  "macro_f1": 0.3606464798223075,
+  "classification_report": {
+    "High": {
+      "precision": 0.316711590296496,
+      "recall": 0.40102389078498296,
+      "f1-score": 0.3539156626506024,
+      "support": 586.0
+    },
+    "Low": {
+      "precision": 0.3796423658872077,
+      "recall": 0.33454545454545453,
+      "f1-score": 0.3556701030927835,
+      "support": 825.0
+    },
+    "Medium": {
+      "precision": 0.3863049095607235,
+      "recall": 0.359375,
+      "f1-score": 0.3723536737235367,
+      "support": 832.0
+    },
+    "accuracy": 0.3611234953187695,
+    "macro avg": {
+      "precision": 0.3608862885814757,
+      "recall": 0.3649814484434792,
+      "f1-score": 0.3606464798223075,
+      "support": 2243.0
+    },
+    "weighted avg": {
+      "precision": 0.365672594081683,
+      "recall": 0.3611234953187695,
+      "f1-score": 0.3614002094974508,
+      "support": 2243.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      235,
+      161,
+      190
+    ],
+    [
+      264,
+      276,
+      285
+    ],
+    [
+      243,
+      290,
+      299
+    ]
+  ],
+  "class_order": [
+    "High",
+    "Low",
+    "Medium"
+  ],
+  "limitations": [
+    "Dataset labels are not clinically validated",
+    "Synthetic dataset performance does not establish real-world safety",
+    "This is an experimental baseline, not a clinical triage system"
+  ]
+}
