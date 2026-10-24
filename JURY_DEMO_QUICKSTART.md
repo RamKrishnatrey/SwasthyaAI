@@ -73,6 +73,18 @@ python scripts/evaluate_dataset.py data/raw/intelmedica__nursing-sentences-1 --o
 
 The downloader records repository metadata and only downloads common data/audio file types. If a dataset is gated, use the normal Hugging Face login and access process; do not bypass permissions. Review each dataset card, license, schema, privacy implications, and suitability before use. The profile script reports data quality only. **Neither script trains or clinically evaluates a model.**
 
+## Optional labeled-data baseline training (research only)
+
+The selected nursing-sentence and medical-TTS repositories may be useful for language/voice work, but they are not automatically labeled symptom-to-urgency examples. Do not train a triage model on them as if they were clinical labels. If you obtain a properly licensed, de-identified, reviewed dataset with explicit text and target-label columns, you can train a generic research baseline:
+
+```powershell
+cd "backend 2"
+pip install -e ".[ml]"
+python scripts/train_baseline.py path\to\labeled.csv --text-column text --label-column label
+```
+
+The script makes a reproducible train/test split and writes a model plus accuracy, per-class metrics, and confusion matrix under `artifacts/research_baseline`. This is **not clinical validation** and is not wired into the live triage path. Do not use the resulting model for diagnosis or care decisions. Training has not been run because no suitable labeled dataset has been confirmed in the repository.
+
 ## Mobile voice
 
 The mobile chat screen now supports recording a short audio message, sending it to the optional backend transcription endpoint, inserting the transcript into the composer, and reading assistant messages aloud. Transcription requires a provider that supports the configured OpenAI-compatible `/audio/transcriptions` endpoint and the `whisper-1` model ID; providers may differ. The recording is sent to that configured provider. Do not send sensitive medical audio unless you have appropriate consent and understand the provider's privacy terms.
