@@ -1,0 +1,136 @@
+[
+  {
+    "id": "cg001",
+    "name": "Dr. Anjali Sharma",
+    "qualification_verified": true,
+    "skills": ["primary_care", "geriatrics", "diabetes_management"],
+    "service_areas": ["South Delhi", "Gurugram"],
+    "languages": ["en", "hi", "hinglish"],
+    "rating": 4.5,
+    "availability": [
+      {"day_of_week": 0, "start_hour": 9, "end_hour": 17},
+      {"day_of_week": 2, "start_hour": 9, "end_hour": 17},
+      {"day_of_week": 4, "start_hour": 9, "end_hour": 17}
+    ],
+    "lat": 28.5355,
+    "lng": 77.3910
+  },
+  {
+    "id": "cg002",
+    "name": "Dr. Rajesh Kumar",
+    "qualification_verified": true,
+    "skills": ["emergency", "trauma", "cardiology"],
+    "service_areas": ["Central Delhi", "North Delhi"],
+    "languages": ["en", "hi"],
+    "rating": 4.8,
+    "availability": [
+      {"day_of_week": 1, "start_hour": 8, "end_hour": 20},
+      {"day_of_week": 3, "start_hour": 8, "end_hour": 20},
+      {"day_of_week": 5, "start_hour": 8, "end_hour": 14}
+    ],
+    "lat": 28.6562,
+    "lng": 77.2410
+  },
+  {
+    "id": "cg003",
+    "name": "Priya Patel (NP)",
+    "qualification_verified": true,
+    "skills": ["primary_care", "pediatrics", "vaccination"],
+    "service_areas": ["West Delhi", "Dwarka"],
+    "languages": ["en", "hi", "hinglish", "gu"],
+    "rating": 4.2,
+    "availability": [
+      {"day_of_week": 0, "start_hour": 10, "end_hour": 18},
+      {"day_of_week": 2, "start_hour": 10, "end_hour": 18},
+      {"day_of_week": 4, "start_hour": 10, "end_hour": 18},
+      {"day_of_week": 6, "start_hour": 9, "end_hour": 13}
+    ],
+    "lat": 28.5921,
+    "lng": 77.0460
+  },
+  {
+    "id": "cg004",
+    "name": "Dr. Amit Singh",
+    "qualification_verified": false,
+    "skills": ["teleconsult", "mental_health", "chronic_care"],
+    "service_areas": ["Remote - Pan India"],
+    "languages": ["en", "hi", "hinglish"],
+    "rating": 4.6,
+    "availability": [
+      {"day_of_week": 0, "start_hour": 9, "end_hour": 21},
+      {"day_of_week": 1, "start_hour": 9, "end_hour": 21},
+      {"day_of_week": 2, "start_hour": 9, "end_hour": 21},
+      {"day_of_week": 3, "start_hour": 9, "end_hour": 21},
+      {"day_of_week": 4, "start_hour": 9, "end_hour": 21},
+      {"day_of_week": 5, "start_hour": 9, "end_hour": 18}
+    ],
+    "lat": 28.7041,
+    "lng": 77.1025
+  },
+  {
+    "id": "cg005",
+    "name": "Sunita Devi (ANM)",
+    "qualification_verified": true,
+    "skills": ["maternal_health", "child_health", "immunization", "home_visit"],
+    "service_areas": ["East Delhi", "Noida"],
+    "languages": ["hi", "hinglish"],
+    "rating": 4.0,
+    "availability": [
+      {"day_of_week": 0, "start_hour": 8, "end_hour": 16},
+      {"day_of_week": 1, "start_hour": 8, "end_hour": 16},
+      {"day_of_week": 2, "start_hour": 8, "end_hour": 16},
+      {"day_of_week": 3, "start_hour": 8, "end_hour": 16},
+      {"day_of_week": 4, "start_hour": 8, "end_hour": 16}
+    ],
+    "lat": 28.6275,
+    "lng": 77.3170
+  },
+  {
+    "id": "cg006",
+    "name": "Dr. Vikram Mehta",
+    "qualification_verified": true,
+    "skills": ["urgent_care", "orthopedics", "sports_injury"],
+    "service_areas": ["South Delhi", "Faridabad"],
+    "languages": ["en", "hi"],
+    "rating": 4.3,
+    "availability": [
+      {"day_of_week": 1, "start_hour": 9, "end_hour": 18},
+      {"day_of_week": 3, "start_hour": 9, "end_hour": 18},
+      {"day_of_week": 5, "start_hour": 9, "end_hour": 18}
+    ],
+    "lat": 28.4595,
+    "lng": 77.3160
+  },
+  {
+    "id": "cg007",
+    "name": "Kavya Nair (Physio)",
+    "qualification_verified": true,
+    "skills": ["rehabilitation", "geriatric_mobility", "post_surgery"],
+    "service_areas": ["South Delhi", "Gurugram"],
+    "languages": ["en", "hi", "mal"],
+    "rating": 4.4,
+    "availability": [
+      {"day_of_week": 0, "start_hour": 9, "end_hour": 17},
+      {"day_of_week": 2, "start_hour": 9, "end_hour": 17},
+      {"day_of_week": 4, "start_hour": 9, "end_hour": 17}
+    ],
+    "lat": 28.5074,
+    "lng": 77.3885
+  },
+  {
+    "id": "cg008",
+    "name": "Dr. Deepak Gupta",
+    "qualification_verified": true,
+    "skills": ["cardiology", "hypertension", "heart_failure"],
+    "service_areas": ["Central Delhi"],
+    "languages": ["en", "hi", "hinglish"],
+    "rating": 4.7,
+    "availability": [
+      {"day_of_week": 0, "start_hour": 10, "end_hour": 16},
+      {"day_of_week": 2, "start_hour": 10, "end_hour": 16},
+      {"day_of_week": 4, "start_hour": 10, "end_hour": 16}
+    ],
+    "lat": 28.6315,
+    "lng": 77.2167
+  }
+]
