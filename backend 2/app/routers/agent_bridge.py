@@ -114,9 +114,15 @@ async def agent_message(request: AgentMessageRequest):
     care_type = result.care_type.value if result.care_type else "primary_care"
     urgency = _urgency(result.urgency.value if result.urgency else None)
     reason = result.reason or "The prototype could not produce a detailed explanation."
+    conversation = [{"role": m.role, "content": m.content} for m in request.history]
+    if not conversation or conversation[-1]["role"] != "user" or conversation[-1]["content"].strip() != request.message.strip():
+        conversation.append({"role": "user", "content": request.message.strip()})
+    llm_reply = await generate_reply(conversation, language.value)
+    response_text = llm_reply or f"{reason}\\n\\nPrototype decision support only — not a medical diagnosis. If symptoms are severe or worsening, seek professional care."
+    response_text += "\\n\\nSwasthyaAI is informational support, not a diagnosis. The care-routing category below is produced by a rule-based prototype."
     return {
         "status": "routed",
-        "response": f"{reason}\n\nPrototype decision support only — not a medical diagnosis. If symptoms are severe or worsening, seek professional care.",
+        "response": response_text,
         "follow_up_question": None,
         "safety": {"flagged": False, "level": "none"},
         "triage": {
