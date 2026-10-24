@@ -87,6 +87,12 @@ const api = {
     const { data } = await client.get(`/api/conversations/${encodeURIComponent(id)}/messages`, { params: { page_size: limit } });
     return data;
   },
+  async transcribeAudio(uri: string) {
+    const form = new FormData();
+    form.append('file', { uri, name: 'recording.m4a', type: 'audio/mp4' } as any);
+    const { data } = await client.post('/api/voice/transcribe', form, { headers: { 'Content-Type': 'multipart/form-data' }, timeout: 65000 });
+    return data as { text: string };
+  },
   async sendMessage(id: string, payload: { content: string; content_type?: string }) {
     const { data } = await client.post(`/api/conversations/${encodeURIComponent(id)}/messages`, {
       role: 'user', content: payload.content, content_type: payload.content_type ?? 'text',
