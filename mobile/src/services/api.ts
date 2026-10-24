@@ -101,8 +101,9 @@ const api = {
     const { data } = await client.post('/api/intake/followup', answers, { params: { session_id: id } });
     return data;
   },
-  async getTriageResult(id: string) {
-    const { data } = await client.post('/api/triage', { session_id: id, confirmed_summary: { original_text: '', symptoms: [] }, language: 'en' });
+  async getTriageResult(id: string, confirmed_summary?: Record<string, unknown>, language = 'en') {
+    if (!confirmed_summary) throw new Error('Triage needs the confirmed symptom summary from the intake step.');
+    const { data } = await client.post('/api/triage', { session_id: id, confirmed_summary, language });
     return data;
   },
   async getUpcomingAppointments(limit = 10) {
@@ -114,11 +115,11 @@ const api = {
     return data;
   },
   async searchClinicians(params: Record<string, unknown>) {
-    const { data } = await client.post('/api/match', params);
+    const { data } = await client.get('/api/appointments/search/clinicians', { params });
     return data;
   },
   async getAvailableSlots(clinicianId: string, days = 30) {
-    const { data } = await client.get('/api/appointments/clinician/available-slots', { params: { clinician_id: clinicianId, days } });
+    const { data } = await client.get('/api/appointments/clinician/available-slots', { params: { clinician_id: clinicianId, date: new Date().toISOString() } });
     return data;
   },
   async bookAppointment(payload: Record<string, unknown>) {
