@@ -1,4 +1,4 @@
-﻿__pycache__/
+__pycache__/
 *.py[cod]
 .venv/
 venv/
@@ -9,3 +9,9 @@ venv/
 .cache_huggingface/
 data/
 datasets/
+.local/
+*.sqlite
+*.sqlite3
+*.db
+node_modules/
+dist/
