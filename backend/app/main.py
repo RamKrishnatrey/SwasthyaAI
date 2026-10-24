@@ -37,10 +37,11 @@ def create_app() -> FastAPI:
     )
 
     # Routers (will be added incrementally)
-    from app.routers import health, intake, triage
+    from app.routers import health, intake, triage, matching
     app.include_router(health.router)
     app.include_router(intake.router)
     app.include_router(triage.router)
+    app.include_router(matching.router)
 
     return app
 
