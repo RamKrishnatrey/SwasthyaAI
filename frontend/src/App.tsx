@@ -17,7 +17,7 @@ import type { AgentResponse, Caregiver, Language, ViewId } from './types/agent';
 import { rankCaregiver, RANKING_WEIGHTS } from './utils/rankingFormula';
 
 interface ChatMessage { id: string; role: 'user' | 'assistant'; content: string; }
-const DEMO_MODE = import.meta.env.VITE_DEMO_MODE !== 'false';
+const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true';
 const makeSessionId = () => `sw-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 
 const navItems: Array<{ id: ViewId; label: string; icon: typeof Home; group: 'main' | 'manage' }> = [
