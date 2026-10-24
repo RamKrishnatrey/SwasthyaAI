@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 from app.schemas import IntakeRequest, Language, TriageRequest
 from app.services.intake import detect_language, process_intake
+from app.services.llm import generate_reply
 from app.services.safety import evaluate_safety
 from app.services.triage import triage_request
 
