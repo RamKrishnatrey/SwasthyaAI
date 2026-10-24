@@ -11,7 +11,7 @@ cd "backend 2"
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+pip install -e ".[dev]"
 Copy-Item .env.example .env -ErrorAction SilentlyContinue
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
