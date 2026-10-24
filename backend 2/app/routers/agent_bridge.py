@@ -10,7 +10,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
 from app.schemas import IntakeRequest, Language, TriageRequest
-from app.services.intake import process_intake
+from app.services.intake import detect_language, process_intake
 from app.services.safety import evaluate_safety
 from app.services.triage import triage_request
 
@@ -66,10 +66,18 @@ async def agent_message(request: AgentMessageRequest):
             "session_id": request.session_id,
         }
 
+    # The UI defaults to English; infer Hindi/Hinglish when the user writes it,
+    # unless they explicitly selected a non-English language in the UI.
     try:
-        language = Language(request.language)
+        selected_language = Language(request.language)
     except ValueError:
-        language = Language.EN
+        selected_language = Language.EN
+    detected_language = detect_language(combined_text)
+    language = (
+        detected_language
+        if selected_language == Language.EN and detected_language in (Language.HI, Language.HINGLISH)
+        else selected_language
+    )
 
     intake = process_intake(
         IntakeRequest(
