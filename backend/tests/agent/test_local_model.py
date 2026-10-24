@@ -23,8 +23,11 @@ def test_adapter_maps_label_to_non_diagnostic_navigation(monkeypatch):
 
 def test_missing_model_is_explicitly_unavailable(monkeypatch):
     adapter = LocalTextNavigationAdapter(model_path="missing.joblib")
-    monkeypatch.setattr(adapter, "_load", lambda: None)
-    monkeypatch.setattr(adapter, "_load_error", "model_file_not_found", raising=False)
+    def no_model():
+        adapter._load_error = "model_file_not_found"
+        return None
+
+    monkeypatch.setattr(adapter, "_load", no_model)
 
     result = asyncio.run(adapter.predict("test symptom description", {}))
 
