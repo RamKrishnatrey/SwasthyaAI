@@ -64,7 +64,7 @@ Public Python interface:
 run_healthcare_agent(session_id, user_message, context=None) -> AgentResponse
 ```
 
-HTTP interface: `POST /api/v1/agent/turn` with `{ "session_id": "...", "user_message": "...", "language": "auto", "location": {"lat": 28.54, "lng": 77.27} | null }`.
+HTTP interface: `POST /api/v1/agent/turn` with `{ "session_id": "...", "user_message": "...", "language": "auto", "location": {"lat": 28.54, "lng": 77.27} | null, "external_ai_consent": false }`. External provider use is off unless the user explicitly sets `external_ai_consent` to `true` for that turn.
 
 `AgentResponse` fields:
 
@@ -79,7 +79,7 @@ HTTP interface: `POST /api/v1/agent/turn` with `{ "session_id": "...", "user_mes
   "safety_flags": [],
   "matched_caregivers": [],
   "models": [{"name": "...", "version": "...", "task": "care_triage", "status": "used | unavailable | failed", "confidence": null}],
-  "aggregation_status": "agreed | disagreement | fallback",
+  "aggregation_status": "agreed | single_model | disagreement | fallback",
   "needs_human_review": true,
   "disclaimer": "This demo is not a medical diagnosis or emergency service."
 }
