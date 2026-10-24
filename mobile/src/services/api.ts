@@ -72,11 +72,11 @@ const api = {
     return data?.user ?? data;
   },
   async getPatientProfile() {
-    const { data } = await client.get('/api/auth/patient/profile');
+    const { data } = await client.get('/api/auth/me/patient-profile');
     return data?.profile ?? data;
   },
   async updateProfile(payload: Record<string, unknown>) {
-    const { data } = await client.patch('/api/auth/me', payload);
+    const { data } = await client.put('/api/auth/me', payload);
     return data?.user ?? data;
   },
   async createConversation(payload: Record<string, unknown>) {
@@ -102,11 +102,11 @@ const api = {
     return data;
   },
   async getTriageResult(id: string) {
-    const { data } = await client.get(`/api/triage/${encodeURIComponent(id)}`);
+    const { data } = await client.post('/api/triage', { session_id: id, confirmed_summary: { original_text: '', symptoms: [] }, language: 'en' });
     return data;
   },
   async getUpcomingAppointments(limit = 10) {
-    const { data } = await client.get('/api/appointments', { params: { upcoming: true, limit } });
+    const { data } = await client.get('/api/appointments/upcoming', { params: { limit } });
     return data;
   },
   async getAppointments(params: Record<string, unknown> = {}) {
@@ -114,11 +114,11 @@ const api = {
     return data;
   },
   async searchClinicians(params: Record<string, unknown>) {
-    const { data } = await client.get('/api/matching/clinicians', { params });
+    const { data } = await client.post('/api/match', params);
     return data;
   },
   async getAvailableSlots(clinicianId: string, days = 30) {
-    const { data } = await client.get(`/api/appointments/slots/${encodeURIComponent(clinicianId)}`, { params: { days } });
+    const { data } = await client.get('/api/appointments/clinician/available-slots', { params: { clinician_id: clinicianId, days } });
     return data;
   },
   async bookAppointment(payload: Record<string, unknown>) {
@@ -126,11 +126,11 @@ const api = {
     return data;
   },
   async cancelAppointment(id: string, reason: string) {
-    const { data } = await client.post(`/api/appointments/${encodeURIComponent(id)}/cancel`, { reason });
+    const { data } = await client.delete(`/api/appointments/${encodeURIComponent(id)}`, { params: { reason } });
     return data;
   },
   async getUpcomingReminders(hours = 24) {
-    const { data } = await client.get('/api/reminders', { params: { upcoming_hours: hours } });
+    const { data } = await client.get('/api/reminders/upcoming', { params: { hours } });
     return data;
   },
 };
