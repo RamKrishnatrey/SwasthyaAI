@@ -60,6 +60,23 @@ Invoke-RestMethod http://127.0.0.1:8001/health
 
 The live frontend agent route is `POST http://127.0.0.1:8001/api/agent/message`. The backend bridge asks follow-up questions from backend 2 intake, applies its SafetyShield rules, then returns the current prototype triage response.
 
+## Dataset download and data-quality review (PowerShell)
+
+Run from the repository root after activating the backend virtual environment:
+
+```powershell
+cd "backend 2"
+pip install -e ".[data]"
+python scripts/download_datasets.py --dataset intelmedica/nursing-sentences-1 --dataset intelmedica/medical-tts-parquet-1
+python scripts/evaluate_dataset.py data/raw/intelmedica__nursing-sentences-1 --output nursing-profile.json
+```
+
+The downloader records repository metadata and only downloads common data/audio file types. If a dataset is gated, use the normal Hugging Face login and access process; do not bypass permissions. Review each dataset card, license, schema, privacy implications, and suitability before use. The profile script reports data quality only. **Neither script trains or clinically evaluates a model.**
+
+## Mobile voice
+
+The mobile chat screen now supports recording a short audio message, sending it to the optional backend transcription endpoint, inserting the transcript into the composer, and reading assistant messages aloud. Transcription requires a provider that supports the configured OpenAI-compatible `/audio/transcriptions` endpoint and the `whisper-1` model ID; providers may differ. The recording is sent to that configured provider. Do not send sensitive medical audio unless you have appropriate consent and understand the provider's privacy terms.
+
 ## Important limitations for the jury
 
 - The current `backend 2/app/services/triage.py` explicitly uses a rule-based mock/prototype model. This bridge does **not** claim that all saved/trained models are integrated or clinically validated.
