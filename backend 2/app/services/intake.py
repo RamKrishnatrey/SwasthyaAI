@@ -186,8 +186,34 @@ def extract_duration(text: str) -> Optional[str]:
 
 
 def extract_age_group(text: str) -> Optional[str]:
-    """Extract age group from text."""
+    """Extract age group from explicit age statements and common short answers."""
     text_lower = text.lower()
+    # Conversational answers commonly provide a bare age ("I'm 22", "age is 70").
+    age_match = re.search(r"\\b(?:i am|i'm|age is|aged|age|meri umar|umar|umr)\\s*[:=]?\\s*(\\d{1,3})\\b", text_lower)
+    if age_match:
+        age = int(age_match.group(1))
+        if 0 <= age <= 1:
+            return "infant"
+        if 2 <= age <= 12:
+            return "child"
+        if 13 <= age <= 18:
+            return "adolescent"
+        if 19 <= age <= 64:
+            return "adult"
+        if 65 <= age <= 120:
+            return "elderly"
+    # If the latest answer is a short, standalone age or age-group label.
+    short_answer = text_lower.strip().strip(".!, ")
+    if short_answer in {"baby", "infant", "newborn", "शिशु"}:
+        return "infant"
+    if short_answer in {"child", "kid", "बच्चा", "बच्ची"}:
+        return "child"
+    if short_answer in {"teen", "teenager", "adolescent", "किशोर", "किशोरी"}:
+        return "adolescent"
+    if short_answer in {"adult", "grown-up", "वयस्क"}:
+        return "adult"
+    if short_answer in {"elderly", "senior", "old", "बुजुर्ग", "वृद्ध"}:
+        return "elderly"
     for age_group, patterns in AGE_GROUP_PATTERNS:
         for pattern in patterns:
             if re.search(pattern, text_lower):
