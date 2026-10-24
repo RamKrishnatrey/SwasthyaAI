@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     environment: str = "development"
 
     # CORS
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:8081,http://127.0.0.1:8081,exp://localhost:8081"
 
     # Database
     database_url: str = "sqlite:///./swasthyaai.db"
@@ -38,6 +38,15 @@ class Settings(BaseSettings):
     weight_availability: float = 0.20
     weight_language: float = 0.10
     weight_rating: float = 0.10
+
+    # Authentication
+    secret_key: str = "your-super-secret-key-change-in-production-min-32-chars"
+    access_token_expire_minutes: int = 60 * 24 * 7  # 7 days
+    refresh_token_expire_days: int = 30
+
+    # TinyFish API
+    tinyfish_api_key: str = ""
+    tinyfish_base_url: str = "https://api.tinyfish.ai"
 
     @property
     def cors_origins_list(self) -> list[str]:

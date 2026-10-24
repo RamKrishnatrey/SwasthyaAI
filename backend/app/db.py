@@ -25,7 +25,7 @@ class Base(DeclarativeBase):
 def init_db() -> None:
     """Initialize database tables."""
     # Import models here to register them
-    from app.models import caregiver  # noqa: F401
+    from app.models import caregiver, user, conversation, appointment  # noqa: F401
     Base.metadata.create_all(bind=engine)
 
 

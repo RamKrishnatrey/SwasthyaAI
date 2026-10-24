@@ -37,11 +37,18 @@ def create_app() -> FastAPI:
     )
 
     # Routers (will be added incrementally)
-    from app.routers import health, intake, triage, matching
+    from app.routers import health, intake, triage, matching, auth, conversations, appointments, medical_records, reminders, tinyfish, ml_models
     app.include_router(health.router)
     app.include_router(intake.router)
     app.include_router(triage.router)
     app.include_router(matching.router)
+    app.include_router(auth.router)
+    app.include_router(conversations.router)
+    app.include_router(appointments.router)
+    app.include_router(medical_records.router)
+    app.include_router(reminders.router)
+    app.include_router(tinyfish.router)
+    app.include_router(ml_models.router)
 
     return app
 
