@@ -189,7 +189,7 @@ def extract_age_group(text: str) -> Optional[str]:
     """Extract age group from explicit age statements and common short answers."""
     text_lower = text.lower()
     # Conversational answers commonly provide a bare age ("I'm 22", "age is 70").
-    age_match = re.search(r"\\b(?:i am|i'm|age is|aged|age|meri umar|umar|umr)\\s*[:=]?\\s*(\\d{1,3})\\b", text_lower)
+    age_match = re.search(r"\b(?:i am|i'm|age is|aged|age|meri umar|umar|umr)\s*[:=]?\s*(\d{1,3})\b", text_lower)
     if age_match:
         age = int(age_match.group(1))
         if 0 <= age <= 1:
