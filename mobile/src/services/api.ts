@@ -8,8 +8,8 @@ function resolveApiBaseUrl(): string {
   const hostUri = Constants.expoConfig?.hostUri;
   const host = hostUri?.split(':')[0];
   // Expo Go's host is the developer computer's LAN IP, reachable from a phone.
-  if (host) return `http://${host}:8000`;
-  return 'http://127.0.0.1:8000';
+  if (host) return `http://${host}:8001`;
+  return 'http://127.0.0.1:8001';
 }
 
 const client: AxiosInstance = axios.create({
