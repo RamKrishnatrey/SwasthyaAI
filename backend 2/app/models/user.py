@@ -2,7 +2,7 @@
 # Authentication and user management
 
 from datetime import datetime
-from sqlalchemy import Column, String, Boolean, DateTime, Enum as SQLEnum, Text, ForeignKey, Index
+from sqlalchemy import Column, String, Boolean, DateTime, Enum as SQLEnum, Text, ForeignKey, Index, Integer
 from sqlalchemy.orm import relationship
 from app.db import Base
 import enum

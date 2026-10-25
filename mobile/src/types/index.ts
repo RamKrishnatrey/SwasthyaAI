@@ -358,6 +358,7 @@ export type TabParamList = {
 
 // Theme Types
 export interface ThemeColors {
+  [key: string]: string;
   primary: string;
   primaryLight: string;
   primaryDark: string;
@@ -390,7 +391,7 @@ export interface ThemeSpacing {
 }
 
 export interface ThemeTypography {
-  h1: { fontSize: number; fontWeight: string; lineHeight: number };
+  h1: { fontSize: number; fontWeight: any; lineHeight: number };
   h2: { fontSize: number; fontWeight: string; lineHeight: number };
   h3: { fontSize: number; fontWeight: string; lineHeight: number };
   h4: { fontSize: number; fontWeight: string; lineHeight: number };

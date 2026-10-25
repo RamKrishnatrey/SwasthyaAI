@@ -8,8 +8,8 @@ function resolveApiBaseUrl(): string {
   const hostUri = Constants.expoConfig?.hostUri;
   const host = hostUri?.split(':')[0];
   // Expo Go's host is the developer computer's LAN IP, reachable from a phone.
-  if (host) return `http://${host}:8000`;
-  return 'http://127.0.0.1:8000';
+  if (host) return `http://${host}:8001`;
+  return 'http://127.0.0.1:8001';
 }
 
 const client: AxiosInstance = axios.create({
@@ -86,6 +86,12 @@ const api = {
   async getConversationMessages(id: string, limit = 50) {
     const { data } = await client.get(`/api/conversations/${encodeURIComponent(id)}/messages`, { params: { page_size: limit } });
     return data;
+  },
+  async transcribeAudio(uri: string) {
+    const form = new FormData();
+    form.append('file', { uri, name: 'recording.m4a', type: 'audio/mp4' } as any);
+    const { data } = await client.post('/api/voice/transcribe', form, { headers: { 'Content-Type': 'multipart/form-data' }, timeout: 65000 });
+    return data as { text: string };
   },
   async sendMessage(id: string, payload: { content: string; content_type?: string }) {
     const { data } = await client.post(`/api/conversations/${encodeURIComponent(id)}/messages`, {

@@ -4,6 +4,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, Animated, Image, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Audio } from 'expo-av';
+import * as Speech from 'expo-speech';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { useAuth } from '../../src/context/AuthContext';
 import { theme } from '../../src/utils/theme';
@@ -26,6 +28,8 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const recordingRef = useRef<Audio.Recording | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [showCitations, setShowCitations] = useState<string | null>(null);
   const [orbScale, setOrbScale] = useState(new Animated.Value(1));
@@ -129,9 +133,38 @@ export default function ChatScreen() {
     }
   };
 
-  const handleVoiceInput = () => {
-    Alert.alert('Voice Input', 'Voice input feature coming soon. This will use expo-av for recording and speech-to-text.');
+  const handleVoiceInput = async () => {
+    try {
+      if (recordingRef.current) {
+        const recording = recordingRef.current;
+        recordingRef.current = null;
+        await recording.stopAndUnloadAsync();
+        setIsRecording(false);
+        const uri = recording.getURI();
+        if (!uri) throw new Error('Could not read the audio recording.');
+        setLoading(true);
+        const transcript = await api.transcribeAudio(uri);
+        if (transcript.text?.trim()) setInputText(prev => prev ? prev + ' ' + transcript.text.trim() : transcript.text.trim());
+        else Alert.alert('Voice Input', 'No speech was detected. Please try again.');
+        setLoading(false);
+        return;
+      }
+      const permission = await Audio.requestPermissionsAsync();
+      if (!permission.granted) { Alert.alert('Microphone permission', 'Allow microphone access in device settings to use voice input.'); return; }
+      await Audio.setAudioModeAsync({ allowsRecordingIOS: true, playsInSilentModeIOS: true });
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+      await recording.startAsync();
+      recordingRef.current = recording;
+      setIsRecording(true);
+      Alert.alert('Recording', 'Speak clearly, then tap the microphone again to stop and transcribe.');
+    } catch (err: any) {
+      recordingRef.current = null; setIsRecording(false); setLoading(false);
+      Alert.alert('Voice Input', err?.response?.data?.detail || err?.message || 'Could not record or transcribe audio.');
+    }
   };
+
+  const speakMessage = (message: ChatMessage) => { if (message.role === 'assistant') { Speech.stop(); Speech.speak(message.content, { language: 'en-IN', rate: 0.95 }); } };
 
   const renderMessage = ({ item }: { item: ChatMessage }) => (
     <MessageBubble
@@ -139,6 +172,7 @@ export default function ChatScreen() {
       showCitations={showCitations === item.id}
       onToggleCitations={() => setShowCitations(showCitations === item.id ? null : item.id)}
       isUser={item.role === 'user'}
+      onSpeak={() => speakMessage(item)}
     />
   );
 
@@ -295,7 +329,7 @@ function WelcomeMessage({ onQuickAction }: { onQuickAction: (text: string) => vo
   );
 }
 
-function MessageBubble({ message, showCitations, onToggleCitations, isUser }: { message: ChatMessage; showCitations: boolean; onToggleCitations: () => void; isUser: boolean }) {
+function MessageBubble({ message, showCitations, onToggleCitations, isUser, onSpeak }: { message: ChatMessage; showCitations: boolean; onToggleCitations: () => void; isUser: boolean; onSpeak: () => void }) {
   const time = new Date(message.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
   return (
@@ -320,6 +354,7 @@ function MessageBubble({ message, showCitations, onToggleCitations, isUser }: { 
           <Text style={{ ...theme.typography.body, color: isUser ? theme.colors.textOnPrimary : theme.colors.text }}>
             {message.content}
           </Text>
+          {!isUser && <TouchableOpacity onPress={onSpeak} style={{ marginTop: theme.spacing.xs }}><Text style={{ ...theme.typography.caption, color: theme.colors.primary }}>Read aloud</Text></TouchableOpacity>}
           {message.citations && message.citations.length > 0 && (
             <View style={{ marginTop: theme.spacing.sm }}>
               <TouchableOpacity onPress={onToggleCitations} style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.xs }}>

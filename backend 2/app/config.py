@@ -44,6 +44,11 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60 * 24 * 7  # 7 days
     refresh_token_expire_days: int = 30
 
+    # Optional OpenAI-compatible conversational model (server-side only)
+    llm_api_key: str = ""
+    llm_base_url: str = "http://localhost:11434/v1"
+    llm_model: str = "qwen2.5:3b"
+
     # TinyFish API
     tinyfish_api_key: str = ""
     tinyfish_base_url: str = "https://api.tinyfish.ai"

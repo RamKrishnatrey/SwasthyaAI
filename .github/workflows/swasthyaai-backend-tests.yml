@@ -1,0 +1,25 @@
+name: SwasthyaAI backend tests
+
+on:
+  pull_request:
+    branches: [main, jury-demo-backend2-integration]
+  push:
+    branches: [fix/swasthyaai-chat-flow]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: backend 2/pyproject.toml
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m compileall -q app scripts tests
+      - run: python -m pytest
