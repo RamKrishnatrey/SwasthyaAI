@@ -101,6 +101,47 @@ async def agent_message(request: AgentMessageRequest):
         else selected_language
     )
 
+    # General-purpose questions should not be forced through medical intake.
+    # Only messages that look symptom/health related continue into triage.
+    health_terms = (
+        "pain", "ache", "fever", "cough", "breath", "symptom", "sick", "injury",
+        "hurt", "headache", "dizzy", "nausea", "vomit", "bleeding", "rash",
+        "medicine", "medication", "health", "doctor", "medical", "pregnan",
+        "chest", "stomach", "blood pressure", "diabetes", "sleep", "anxiety",
+        "depress", "suicid", "दर्द", "बुखार", "खांसी", "सांस", "बीमार", "चक्कर",
+        "दवा", "स्वास्थ्य", "सिरदर्द", "उल्टी", "सीने", "पेट दर्द",
+    )
+    latest_lower = latest_user_text.lower()
+    is_health_question = any(term in latest_lower for term in health_terms)
+
+    conversation = [{"role": m.role, "content": m.content} for m in request.history]
+    if not conversation or conversation[-1]["role"] != "user" or conversation[-1]["content"].strip() != latest_user_text:
+        conversation.append({"role": "user", "content": latest_user_text})
+
+    if not is_health_question:
+        chat_reply = await generate_reply(conversation, language.value)
+        if chat_reply:
+            return {
+                "status": "routed",
+                "response": chat_reply,
+                "follow_up_question": None,
+                "safety": {"flagged": False, "level": "unknown"},
+                "triage": None,
+                "caregiver_matches": [],
+                "explanation": ["General-purpose response from the configured language model; no medical triage was performed."],
+                "session_id": request.session_id,
+            }
+        return {
+            "status": "unavailable",
+            "response": "I can answer general questions once a local language model is running. This setup is configured for free Ollama at http://localhost:11434. Install Ollama, download the qwen2.5:3b model, then restart this backend. No paid API credits are required.",
+            "follow_up_question": None,
+            "safety": {"flagged": False, "level": "unknown"},
+            "triage": None,
+            "caregiver_matches": [],
+            "explanation": ["No language model responded; no answer was fabricated."],
+            "session_id": request.session_id,
+        }
+
     intake = process_intake(
         IntakeRequest(
             text=combined_text[:2000],
