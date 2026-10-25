@@ -1,54 +1,54 @@
-"""Optional OpenAI-compatible conversational layer.
+"""General-purpose chat via an OpenAI-compatible API or a local Ollama server.
 
-This service generates a supportive, multilingual explanation only. Deterministic
-SafetyShield and rule-based prototype triage run independently and take precedence.
-Never send API keys to the browser.
+No paid API key is required when Ollama is running locally. Keys stay server-side.
 """
 from __future__ import annotations
 
 import httpx
-
 from app.config import get_settings
 
-SYSTEM_PROMPT = """You are SwasthyaAI, a careful health-navigation assistant, not a doctor.
-Respond in the user's language (English, Hindi, or Hinglish). Be calm, empathetic,
-and concise. Do not diagnose, prescribe medicines, recommend dosages, or claim
-certainty. Ask at most one focused follow-up question at a time. Do not repeat
-questions already answered in the conversation. If symptoms may be severe or
-worsening, advise prompt professional care. For immediate danger, tell the user
-to contact local emergency services. Never claim you are a clinician. Clearly
-say this is informational support, not a diagnosis. Do not invent patient facts.
+SYSTEM_PROMPT = """You are SwasthyaAI, a helpful general-purpose assistant.
+Answer the user's actual question directly and naturally. You can discuss coding,
+technology, science, studies, writing, planning, everyday topics, and general health
+information. Use the conversation history for context, and answer in the user's
+language (English, Hindi, or Hinglish). Be clear, useful, and honest about uncertainty.
+For medical topics, provide general information only: do not claim to diagnose, do not
+prescribe medication or dosages, and recommend a qualified professional for personal
+medical decisions. For possible immediate danger, advise contacting local emergency
+services. Never invent facts or claim a model/tool was used when it was not.
 """
 
 async def generate_reply(messages: list[dict[str, str]], language: str) -> str | None:
-    """Return a provider reply, or None when provider is not configured/unavailable."""
+    """Return a model reply, or None if no provider is configured/reachable."""
     settings = get_settings()
-    if not settings.llm_api_key.strip():
+    base_url = settings.llm_base_url.rstrip("/")
+    local_ollama = "localhost:11434" in base_url or "127.0.0.1:11434" in base_url
+    if not settings.llm_api_key.strip() and not local_ollama:
         return None
 
-    base_url = settings.llm_base_url.rstrip("/")
-    endpoint = f"{base_url}/chat/completions"
     payload = {
         "model": settings.llm_model,
-        "temperature": 0.2,
+        "temperature": 0.4,
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT + f" Preferred language: {language}."},
-            *messages[-12:],
+            *messages[-16:],
         ],
     }
+    headers = {"Content-Type": "application/json"}
+    if settings.llm_api_key.strip():
+        headers["Authorization"] = f"Bearer {settings.llm_api_key}"
     try:
-        async with httpx.AsyncClient(timeout=httpx.Timeout(25.0, connect=5.0)) as client:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(90.0, connect=5.0)) as client:
             response = await client.post(
-                endpoint,
-                headers={"Authorization": f"Bearer {settings.llm_api_key}", "Content-Type": "application/json"},
+                f"{base_url}/chat/completions",
+                headers=headers,
                 json=payload,
             )
             response.raise_for_status()
             data = response.json()
-            text = data["choices"][0]["message"]["content"]
-            if isinstance(text, str) and text.strip():
-                return text.strip()[:4000]
+            answer = data["choices"][0]["message"]["content"]
+            if isinstance(answer, str) and answer.strip():
+                return answer.strip()[:6000]
     except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError):
-        # Safe local fallback: a provider outage must not fabricate a model answer.
         return None
     return None
