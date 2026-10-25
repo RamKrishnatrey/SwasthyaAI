@@ -2,7 +2,7 @@
 # Chat history, AI interactions, symptom assessments
 
 from datetime import datetime
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Integer, Boolean, JSON, Enum as SQLEnum, Index
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Integer, Boolean, Float, JSON, Enum as SQLEnum, Index
 from sqlalchemy.orm import relationship
 from app.db import Base
 import enum
